@@ -1,12 +1,13 @@
 package com.algorithms.assg1;
 
-/**
- * Created by lim on 14/06/2017.
- */
-
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
-import com.algorithms.assg1.*;
+
+/*
+ * http://coursera.cs.princeton.edu/algs4/assignments/percolation.html
+ * `PercolationStats` is for estimating the value of the percolation threshold
+ * via Monte Carlo simulation
+ */
 
 public class PercolationStats {
 
@@ -14,8 +15,9 @@ public class PercolationStats {
     private int trials;
     private double[] fractions;  // results of experiments
 
-    public PercolationStats(int n, int trials) {
+    public PercolationStats(int n, int trials) throws IllegalArgumentException {
         // perform trials independent experiments on an n-by-n grid
+        if (n <= 0 || trials <= 0) throw new IllegalArgumentException();
         this.n = n;
         this.trials = trials;
         fractions = new double[trials];
@@ -51,7 +53,20 @@ public class PercolationStats {
 
     public static void main(String[] args) {
         // test client (described below)
-        PercolationStats ps = new PercolationStats(3, 5);
+        int n = 10;
+        int trials = 10;
+
+        if (args.length > 1) {
+            n = Integer.parseInt(args[0]);
+            trials = Integer.parseInt(args[1]);
+        }
+
+        PercolationStats ps = new PercolationStats(n, trials);
+
+        System.out.println("mean                    = " + ps.mean());
+        System.out.println("stddev                  = " + ps.stddev());
+        System.out.println("95% confidence interval = [" + ps.confidenceLo()
+                           + ", " + ps.confidenceHi() + "]");
     }
 }
 
