@@ -11,27 +11,25 @@ import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
 
-    private int n;
     private int trials;
     private double[] fractions;  // results of experiments
 
-    public PercolationStats(int n, int trials) throws IllegalArgumentException {
+    public PercolationStats(int n, int trials) {
         // perform trials independent experiments on an n-by-n grid
         if (n <= 0 || trials <= 0) throw new IllegalArgumentException();
-        this.n = n;
         this.trials = trials;
         fractions = new double[trials];
 
-        for (int i=0; i<trials; i++) {
+        for (int i = 0; i < trials; i++) {
             Percolation pe = new Percolation(n);
 
             while (!pe.percolates()) {
-                int row_rand = StdRandom.uniform(1, n+1);
-                int col_rand = StdRandom.uniform(1, n+1);
-                if(!pe.isOpen(row_rand, col_rand)) pe.open(row_rand, col_rand);
+                int rowRand = StdRandom.uniform(1, n+1);
+                int colRand = StdRandom.uniform(1, n+1);
+                if (!pe.isOpen(rowRand, colRand)) pe.open(rowRand, colRand);
             }
             fractions[i] = (double) pe.numberOfOpenSites() / n / n;
-            System.out.println(fractions[i]);
+            // System.out.println(fractions[i]);
         }
     }
     public double mean() {

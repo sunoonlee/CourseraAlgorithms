@@ -15,7 +15,7 @@ public class Percolation {
     private boolean[][] sitesOpen;  // open or not
     private WeightedQuickUnionUF uf;
 
-    public Percolation(int n) throws IllegalArgumentException {
+    public Percolation(int n) {
         // create n-by-n grid, with all sites blocked
         if (n <= 0) throw new IllegalArgumentException();
         this.n = n;
@@ -24,7 +24,7 @@ public class Percolation {
         uf = new WeightedQuickUnionUF(n*n + 2);  // first and last: virtual-top, virtual-bottom
     }
 
-    public void open(int row, int col) throws IndexOutOfBoundsException {
+    public void open(int row, int col) {
         // open site (row, col) if it is not open already
         if (row < 1 || row > n || col < 1 || col > n) {
             throw new IndexOutOfBoundsException();
@@ -46,14 +46,14 @@ public class Percolation {
         }
     }
 
-    public boolean isOpen(int row, int col) throws IndexOutOfBoundsException {
+    public boolean isOpen(int row, int col) {
         if (row < 1 || row > n || col < 1 || col > n) {
             throw new IndexOutOfBoundsException();
         }
         return sitesOpen[row-1][col-1];
     }
 
-    public boolean isFull(int row, int col) throws IndexOutOfBoundsException {
+    public boolean isFull(int row, int col) {
         if (row < 1 || row > n || col < 1 || col > n) {
             throw new IndexOutOfBoundsException();
         }
