@@ -26,24 +26,20 @@ public class FastCollinearPoints {
             otherPts = Arrays.copyOfRange(points, i + 1, n);
             Arrays.sort(otherPts, p.slopeOrder());
 
-            for (int j = 1; j < otherPts.length; j++) {
-                if (otherPts[j].slopeTo(p) == otherPts[j - 1].slopeTo(p))
+            for (int j = 1; j < otherPts.length + 1; j++) {
+                if (j != otherPts.length && otherPts[j].slopeTo(p) == otherPts[j - 1].slopeTo(p))
                     equalSlopeCount += 1;
-
-                if (equalSlopeCount >= 2 && (
-                        j == otherPts.length - 1 ||
-                        otherPts[j].slopeTo(p) != otherPts[j - 1].slopeTo(p))
-                        ){
-                    curSegPoints = new Point[equalSlopeCount + 1];
-                    curSegPoints[0] = p;
-                    for (int k = 1; k < curSegPoints.length; k++)
-                        curSegPoints[k] = otherPts[j - k + 1];
-                    Arrays.sort(curSegPoints);
-                    lineSegments[numSegments++] = new LineSegment(curSegPoints[0], curSegPoints[curSegPoints.length - 1]);
+                else {
+                    if (equalSlopeCount >= 3) {
+                        curSegPoints = new Point[equalSlopeCount + 1];
+                        curSegPoints[0] = p;
+                        for (int k = 1; k < curSegPoints.length; k++)
+                            curSegPoints[k] = otherPts[j - k];  // indices of collinear points: [j-equalSlopeCount, j-1]
+                        Arrays.sort(curSegPoints);
+                        lineSegments[numSegments++] = new LineSegment(curSegPoints[0], curSegPoints[curSegPoints.length - 1]);
+                    }
+                    equalSlopeCount = 1;  // restart counting
                 }
-
-                if (otherPts[j].slopeTo(p) != otherPts[j - 1].slopeTo(p))
-                    equalSlopeCount = 1;
             }
         }
     }
@@ -63,7 +59,7 @@ public class FastCollinearPoints {
         int num = collinearPoints.numberOfSegments();
         assert num == 2;
         LineSegment[] segments = collinearPoints.segments();
-        for (int i = 0; i < num; i++)
-            System.out.println(segments[i]);
+        // for (int i = 0; i < num; i++)
+        //    System.out.println(segments[i]);
     }
 }

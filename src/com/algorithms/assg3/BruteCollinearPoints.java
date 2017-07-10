@@ -30,11 +30,11 @@ public class BruteCollinearPoints {
                     slopek = points[k].slopeTo(points[i]);
                     if (slopej != slopek) continue;
 
-                    for (int l = k + 1; l < n; l++) {
-                        slopel = points[l].slopeTo(points[i]);
+                    for (int m = k + 1; m < n; m++) {
+                        slopel = points[m].slopeTo(points[i]);
                         if (slopel != slopej) continue;
 
-                        curSegmentPoints = new Point[]{points[i], points[j], points[k], points[l]};
+                        curSegmentPoints = new Point[]{points[i], points[j], points[k], points[m]};
                         Arrays.sort(curSegmentPoints);
                         lineSegments[numSegments] = new LineSegment(curSegmentPoints[0], curSegmentPoints[3]);
                         numSegments++;
@@ -58,7 +58,7 @@ public class BruteCollinearPoints {
         int num = collinearPoints.numberOfSegments();
         assert num == 2;
         LineSegment[] segments = collinearPoints.segments();
-        for (int i = 0; i < num; i++)
-            System.out.println(segments[i]);
+        // for (int i = 0; i < num; i++)
+        //    System.out.println(segments[i]);
     }
 }

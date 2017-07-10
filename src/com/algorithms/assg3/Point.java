@@ -131,8 +131,8 @@ public class Point implements Comparable<Point> {
         assert b.compareTo(a) == 1;
         assert b.compareTo(c) == -1;
 
-        assert b.slopeTo(a) == 1.0;
-        assert c.slopeTo(a) == 0.5;
+        assert Math.abs(b.slopeTo(a) - 1.0) < 0.0001;
+        assert Math.abs(c.slopeTo(a) - 0.5) < 0.0001;
 
         Comparator<Point> cp = a.slopeOrder();
         assert cp.compare(b, c) == 1;
