@@ -1,4 +1,4 @@
-package com.algorithms.assg1;
+package assg1;
 
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;

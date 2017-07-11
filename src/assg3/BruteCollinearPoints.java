@@ -1,4 +1,4 @@
-package com.algorithms.assg3;
+package assg3;
 
 /**
  * Finding collinear points: a brute-force solution

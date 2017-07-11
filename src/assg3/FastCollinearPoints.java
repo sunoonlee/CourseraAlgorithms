@@ -1,4 +1,4 @@
-package com.algorithms.assg3;
+package assg3;
 
 /**
  * Finding collinear points: a faster, sort-based solution
@@ -53,13 +53,14 @@ public class FastCollinearPoints {
     }
 
     public static void main(String[] args) {
+        System.out.println("ok");
         Point[] points = {new Point(0, 0), new Point(1, 0), new Point(2, 0), new Point(3, 0),
-                          new Point(1, 1), new Point(2, 2), new Point(3, 3)};
+                new Point(1, 1), new Point(2, 2), new Point(3, 3)};
         BruteCollinearPoints collinearPoints = new BruteCollinearPoints(points);
         int num = collinearPoints.numberOfSegments();
         assert num == 2;
         LineSegment[] segments = collinearPoints.segments();
         // for (int i = 0; i < num; i++)
-        //    System.out.println(segments[i]);
+        //     System.out.println(segments[i]);
     }
 }

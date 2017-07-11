@@ -1,4 +1,4 @@
-package com.algorithms.assg3;
+package assg3;
 
 /*************************************************************************
  *  Compilation:  javac LineSegment.java

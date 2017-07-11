@@ -1,5 +1,4 @@
-package com.algorithms.assg2;
-
+package assg2;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
