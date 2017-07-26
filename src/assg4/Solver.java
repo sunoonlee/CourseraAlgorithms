@@ -92,7 +92,7 @@ public class Solver {
     }
 
     public boolean isSolvable() {
-        return true;
+        return solvable;
     }
 
     // min number of moves to solve initial board; -1 if unsolvable
