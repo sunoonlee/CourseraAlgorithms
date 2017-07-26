@@ -14,22 +14,22 @@ import edu.princeton.cs.algs4.StdOut;
  * using A* search algorithm and priority queue
  */
 public class Solver {
-    private MinPQ<Node> pq = new MinPQ<Node>();
-    private MinPQ<Node> pqTwin = new MinPQ<Node>();
-    private Stack<Board> sequence = new Stack<Board>();
-    private boolean solvable = false;
-    private int minMoves = -1;
+    private final Stack<Board> sequence = new Stack<Board>();
+    private final boolean solvable;
+    private final int minMoves;
 
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial) {
         if (initial == null) throw new IllegalArgumentException();
+
+        MinPQ<Node> pq = new MinPQ<Node>();
+        MinPQ<Node> pqTwin = new MinPQ<Node>();
 
         Node initNode = new Node(initial, null, 0);
         Node initNodeTwin = new Node(initial.twin(), null, 0);
         pq.insert(initNode);
         pqTwin.insert(initNodeTwin);
 
-        int moves = 0;
         Node curr, currTwin;
         while (true) {
             curr = pq.delMin();
@@ -39,18 +39,20 @@ public class Solver {
                 solvable = true;
                 break;
             }
-            if (currTwin.board.isGoal()) break;
-            moves++;
+            if (currTwin.board.isGoal()) {
+                solvable = false;
+                break;
+            }
 
             // insert all neighbors
             for (Board b: curr.board.neighbors()) {
                 if (curr.prev != null && b.equals(curr.prev.board)) continue;
-                pq.insert(new Node(b, curr, moves));
+                pq.insert(new Node(b, curr, curr.moves + 1));
             }
 
             for (Board b: currTwin.board.neighbors()) {
                 if (currTwin.prev != null && b.equals(currTwin.prev.board)) continue;
-                pqTwin.insert(new Node(b, currTwin, moves));
+                pqTwin.insert(new Node(b, currTwin, curr.moves + 1));
             }
         }
 
@@ -60,28 +62,30 @@ public class Solver {
                 sequence.push(node.board);
             }
         }
+        else {
+            minMoves = -1;
+        }
     }
 
     private class Node implements Comparable<Node> {
-        Board board;
-        Node prev;
-        int moves;
-        private int hamming;
+        private Board board;
+        private Node prev;
+        private int moves;
+        private int priority;
 
         public Node(Board board, Node prev, int moves) {
             this.board = board;
             this.prev = prev;
             this.moves = moves;
-            this.hamming = hammingPriority();
+            this.priority = manhattanPriority();
         }
 
-        int hammingPriority() { return board.hamming() + moves; }
         int manhattanPriority() { return board.manhattan() + moves; }
 
         public int compareTo(Node w) {
-            if (this.hamming < w.hamming)
+            if (this.priority < w.priority)
                 return -1;
-            else if (this.hamming == w.hamming)
+            else if (this.priority == w.priority)
                 return 0;
             else return 1;
         }

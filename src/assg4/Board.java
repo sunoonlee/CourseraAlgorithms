@@ -84,10 +84,17 @@ public class Board {
         return new Board(blocksTwin);
     }
 
-    public boolean equals(Board y) {
+    public boolean equals(Object y) {
+        if (this == y) return true;
+        if (y == null) return false;
+        if (getClass() != y.getClass()) return false;
+
+        Board w = (Board) y;
+        if (dimension() != w.dimension()) return false;
+
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++)
-                if (blocks[i][j] != y.blocks[i][j])
+                if (blocks[i][j] != w.blocks[i][j])
                     return false;
         return true;
     }
@@ -95,19 +102,19 @@ public class Board {
     private int[][] swap(int[][] a, int i, int j, String direction) {
         int[][] swapped = copy2D(a);
         int temp;
-        if (direction == "up") {
+        if ("up".equals(direction)) {
             temp = swapped[i-1][j];
             swapped[i-1][j] = swapped[i][j];
         }
-        else if (direction == "down") {
+        else if ("down".equals(direction)) {
             temp = swapped[i+1][j];
             swapped[i+1][j] = swapped[i][j];
         }
-        else if (direction == "left") {
+        else if ("left".equals(direction)) {
             temp = swapped[i][j-1];
             swapped[i][j-1] = swapped[i][j];
         }
-        else if (direction == "right") {
+        else if ("right".equals(direction)) {
             temp = swapped[i][j+1];
             swapped[i][j+1] = swapped[i][j];
         }
@@ -161,7 +168,6 @@ public class Board {
     }
 
     public static void main(String[] args) {
-        /*
         int[][] a = {{0, 1, 3}, {4, 2, 5}, {6, 8, 7}};
         Board bd = new Board(a);
         System.out.println(bd.toString());
@@ -177,7 +183,9 @@ public class Board {
         assert bd.isGoal() == false;
         assert bd.hamming() == 5;
         assert bd.manhattan() == 8;
-        */
+
+        Board bd2 = new Board(a);
+        assert bd.equals(bd2);
     }
 }
 
