@@ -20,39 +20,41 @@ public class KdTree {
             this.p = p;
         }
     }
+    private int size = 0;
 
     public KdTree() {}
-    public boolean isEmpty() { return root == null; }
-    public int size() { return size(root); }
-
-    private int size(Node x) {
-        if (x == null) return 0;
-        else return 1 + size(x.lb) + size(x.rt);
-    }
+    public boolean isEmpty() { return size == 0; }
+    public int size() { return size; }
 
     // add the point to the set (if it is not already in the set)
     public void insert(Point2D p) {
         if (p == null) throw new IllegalArgumentException("called insert() with a null point");
-        if (contains(p)) return;
-        boolean useX = true;
-        root = insert(root, p, useX);
+        if (root == null) {
+            root = new Node(p);
+            root.rect = new RectHV(0.0, 0.0, 1.0, 1.0);
+            size = 1;
+        }
+        else root = insert(root, p, true);
     }
 
     private Node insert(Node x, Point2D p, boolean useX) {
         if (x == null) {
-            x = new Node(p);
-            return x;
+            size += 1;
+            return new Node(p);
         }
-        if (x == root && x.rect == null) x.rect = new RectHV(0.0, 0.0, 1.0, 1.0);
 
-        boolean less = useX ? p.x() < x.p.x() : p.y() < x.p.y();
-        if (less) {
+        int cmp = useX ? ((Double) p.x()).compareTo((Double) x.p.x())
+                       : ((Double) p.y()).compareTo((Double) x.p.y());
+
+        if (cmp < 0) {
             x.lb = insert(x.lb, p, !useX);
-            if (x.lb.rect == null) x.lb.rect = subRect(x.rect, x.p, useX, less);
+            if (x.lb.rect == null) x.lb.rect = subRect(x.rect, x.p, useX, true);
         }
         else {
-            x.rt = insert(x.rt, p, !useX);
-            if (x.rt.rect == null) x.rt.rect = subRect(x.rect, x.p, useX, less);
+            if (!(cmp == 0 && x.p.equals(p))) {
+                x.rt = insert(x.rt, p, !useX);
+                if (x.rt.rect == null) x.rt.rect = subRect(x.rect, x.p, useX, false);
+            }
         }
         return x;
     }
@@ -122,28 +124,27 @@ public class KdTree {
     public Point2D nearest(Point2D p) {
         if (p == null) throw new IllegalArgumentException("called nearest() with a null point");
         if (root == null) return null;
-        Point2D result = root.p;
-        nearest(root, p, result, true);
-        return result;
+        return nearest(root, p, root.p, true);
     }
 
-    private void nearest(Node x, Point2D p, Point2D result, boolean useX) {
-        if (x == null) return;
+    private Point2D nearest(Node x, Point2D p, Point2D result, boolean useX) {
+        if (x == null) return result;
         if (x.p.distanceSquaredTo(p) < result.distanceSquaredTo(p)) result = x.p;
+
         int cmp = useX ? ((Double) p.x()).compareTo((Double) x.p.x())
                        : ((Double) p.y()).compareTo((Double) x.p.y());
 
-        // cmp < 0 时优先搜索 lb, 否则优先搜索 rt
-        if (cmp < 0) {
-            nearest(x.lb, p, result, !useX);
-            if (x.rt != null && x.rt.rect.distanceSquaredTo(p) < result.distanceSquaredTo(p))
-                nearest(x.rt, p, result, !useX);
+        if (x.rect.distanceSquaredTo(p) < result.distanceSquaredTo(p)) {
+            // cmp < 0 时优先搜索 lb, 否则优先搜索 rt
+            if (cmp < 0) {
+                result = nearest(x.lb, p, result, !useX);
+                result = nearest(x.rt, p, result, !useX);
+            } else {
+                result = nearest(x.rt, p, result, !useX);
+                result = nearest(x.lb, p, result, !useX);
+            }
         }
-        else {
-            nearest(x.rt, p, result, !useX);
-            if (x.lb != null && x.lb.rect.distanceSquaredTo(p) < result.distanceSquaredTo(p))
-                nearest(x.lb, p, result, !useX);
-        }
+        return result;
     }
 
     public static void main(String[] args) {
@@ -152,7 +153,7 @@ public class KdTree {
         Point2D p3 = new Point2D(0.9, 0.7);
         Point2D p4 = new Point2D(0.8, 0.4);
         Point2D p5 = new Point2D(0.3, 0.3);
-        Point2D p6 = new Point2D(0.6, 0.6);
+        Point2D p6 = new Point2D(0.8, 0.7);
 
         KdTree t = new KdTree();
         t.insert(p1);
@@ -168,7 +169,7 @@ public class KdTree {
         assert t.size() == 5;
         assert t.contains(p1);
         assert !t.contains(p6);
-        assert t.nearest(p6).equals(p1);
+        System.out.println(t.nearest(p6));
 
         RectHV r = new RectHV(0.6, 0.3, 1.0, 1.0);
         Iterable<Point2D> pts = t.range(r);
