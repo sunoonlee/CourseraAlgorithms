@@ -9,7 +9,7 @@
     - 例子: [{Algo}说到红黑树 - Google Groups](https://groups.google.com/forum/#!topic/pongba/NROiEGX6umg)
 - 学习小结
   - Part1 前半段的学习, 我是以课程为主教材为辅, 后半段反过来, 发现效果更好一些. 因为书讲得很详细, 并且文字形式更方便咀嚼. 而视频听起来有点平淡 (没有 LFD 那样有感染力).
-  - 大部分都在阅读, 尽管会敲一下示例代码, 课程的每周作业也做了4/5, 但书上的大量练习都略过了. 感觉如果只是阅读的话, 容易把一些模糊的地方忽略掉, 误以为都懂了. 如果能适当多做点练习应该会比较好.
+  - 大部分都在阅读, 尽管会敲一下示例代码, 课程的每周作业也都做了, 但书上的大量练习都略过了. 感觉如果只是阅读的话, 容易把一些模糊的地方忽略掉, 误以为都懂了. 如果能适当多做点练习应该会比较好.
 
 ## w1 Course Introduction
 
@@ -216,7 +216,7 @@ modular programming
     public interface Iterable<Item> {
       Iterator<Item> iterator();
     }
-    
+
     public interface Iterator<Item> {
       boolean hasNext();
       Item next();
@@ -1091,19 +1091,19 @@ uniform hashing assumption: hash function 能够均匀且独立地把 keys 分�
     -   正整数: 对一个素数取余数. modular hashing.
     -   小数: use modular hashing on the binary representation ??
     -   字符串:
-    
+
         int hash = 0;
         for (int i = 0; i < s.length(); i++)
             hash = (R * hash + s.charAt(i)) % M;
-    
+
     -   compound keys: 如 Date 类型: `int hash = (((day * R + month) % M) * R + year) % M;`
 
 -   hashCode() 方法
 
     Java 内置数据类型都有 `hashCode()` 方法. `equals` 是 `hashCode()` 相等的充分条件.
-    
+
     自定义 hashCode() 方法
-    
+
 ```java
 public class Transaction {
     private final String who;
@@ -1119,9 +1119,9 @@ public class Transaction {
     }
 }
 ```
-    
+
 -   hash code design (slide p11)
-    
+
     -   "标准"做法:
         -   combine each significant field using the 31x+y rule
         -   if field is primitive type, use wrapper type `hashCode()`
@@ -1129,9 +1129,9 @@ public class Transaction {
         -   if field is reference type, use `hashCode()`
         -   if field is array, apply to each entry (or, use `Arrays.deepHashCode()`)
     -   basic rule: use the whole key
-    
+
 -   hashCode() vs. hash function
-    
+
     -   hashCode() 值域是 32-bit 整数, hash function 值域是 [0, M-1] (作为 array index)
     -   `()x.hashCode() & 0x7fffffff) % M`. 这里的&运算可去除符号.
 
@@ -1145,7 +1145,7 @@ public class Transaction {
     -   consistent: equal keys must produce the same hash value
     -   efficient to compute
     -   uniformly distribute the set of keys
-    
+
     -   保证均匀性最简单的方法: 使 all the bits of the key 在计算 hash 值时起均等的作用
     -   最常见的错误: ignore significant numbers of the key bits
 
